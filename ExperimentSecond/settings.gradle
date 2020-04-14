@@ -1,0 +1,8 @@
+rootProject.name='ExperimentSecond'
+include ':app'
+include ':example2_1'
+include ':example2_2'
+include ':example2_3'
+include ':example2_4'
+include ':example2_5'
+include ':example2_6'
