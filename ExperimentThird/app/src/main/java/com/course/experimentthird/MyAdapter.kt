@@ -21,11 +21,11 @@ class MyAdapter(private val mContext: Context, private val dataSet: Array<String
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == 0) {  // 课程号
             val v =
-                LayoutInflater.from(mContext).inflate(R.layout.index_layout, viewGroup, false)
+                LayoutInflater.from(mContext).inflate(R.layout.item_course_index, viewGroup, false)
             v.isClickable = false
             HeadViewHolder(v)
         } else {  // 课程卡片
-            val v = LayoutInflater.from(mContext).inflate(R.layout.course_layout, viewGroup, false)
+            val v = LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
             CardViewHolder(v)
         }
     }
