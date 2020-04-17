@@ -31,10 +31,10 @@ class MyAdapter(
         return when (viewType) {
             0 -> {
                 val v = LayoutInflater.from(mContext)
-                    .inflate(R.layout.item_weekday_index, viewGroup, false)
+                    .inflate(R.layout.item_course_index, viewGroup, false)
                 v.setBackgroundColor(getColor(mContext, R.color.mGray))
                 v.isClickable = false
-                WeekdayHeaderViewHolder(v)
+                CourseIndexViewHolder(v)
             }
             else -> {
                 val v =
@@ -46,13 +46,18 @@ class MyAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        // 在屏幕的第几行第几列
+        val row = position / (MyValues.weekDisplayNum + 1)
+        val col = position % (MyValues.weekDisplayNum + 1)
+
         // 用数据中的内容替换布局中的内容
         if (getItemViewType(position) == 0) {
-            val temp: WeekdayHeaderViewHolder = viewHolder as WeekdayHeaderViewHolder
-            temp.tvWeekday.text = "星期X"
-            temp.tvDate.text = "xx-xx"
+            val temp: CourseIndexViewHolder = viewHolder as CourseIndexViewHolder
+            temp.tvCourseIndex.text = (row + 1).toString()
         } else {
-            if (!mCursor.moveToPosition(position - 7))
+            // 该行,列对应数据的pos
+            val dataPos = row * MyValues.maxWeekNum + col - 1
+            if (!mCursor.moveToPosition(dataPos))
                 return
 
             val nCourseName =
@@ -70,16 +75,21 @@ class MyAdapter(
             temp.tvCourse.text = nCourseName
             temp.tvTeacher.text = nTeacherName
             temp.tvLocation.text = nLocation
-            temp.itemView.setOnClickListener { mListener.onClick(position - 7) }
+            temp.itemView.setOnClickListener { mListener.onClick(dataPos) }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return position / MyValues.weekDisplayNum
+        return if (position % (MyValues.weekDisplayNum + 1) == 0) {
+            0
+        } else {
+            (position / (MyValues.weekDisplayNum + 1)) + 1
+        }
     }
 
     override fun getItemCount(): Int {
-        return mCursor.count
+        // item的总数
+        return (MyValues.weekDisplayNum + 1) * MyValues.courseNum
     }
 
     interface OnItemClickedListener {
@@ -93,6 +103,11 @@ class MyAdapter(
             this.notifyDataSetChanged()
         }
     }
+
+    class CourseIndexViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        val tvCourseIndex: TextView = v.findViewById(R.id.tv_course_index)
+    }
+
 
     class WeekdayHeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val tvWeekday: TextView = v.findViewById(R.id.tv_weekday)

@@ -1,19 +1,26 @@
 package com.course.experimentthird
 
+import android.app.ActionBar
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.course.experimentthird.datasource.CourseContract
 import com.course.experimentthird.datasource.CourseDbHelper
-import kotlin.math.log
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var mLLWeekTitle: LinearLayout
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var mDb: SQLiteDatabase
 
@@ -21,13 +28,34 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mTeacher: String
     private lateinit var mLocation: String
     private lateinit var mAdapter: MyAdapter
+    private val weekDays = arrayOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val mContext = this
+
+
         recyclerView = findViewById(R.id.rv_grid)
-//        recyclerView.background = getDrawable(R.drawable.bridge)
+        mLLWeekTitle = findViewById(R.id.ll_week_title)
+        recyclerView.setBackgroundColor(getColor(R.color.mWhite))
+        // 添加表头
+        for (i in 0 until MyValues.weekDisplayNum) {
+            val v =
+                View.inflate(mContext, R.layout.item_weekday_index, null)
+            (v.findViewById<View>(R.id.tv_weekday) as TextView).text = weekDays[i]
+
+            val calendar: Calendar = Calendar.getInstance()
+            val firstDayOfWeek: Int = calendar.firstDayOfWeek
+            calendar.set(Calendar.DAY_OF_WEEK, firstDayOfWeek + i + 1)
+            val sdf = SimpleDateFormat("MM-dd", Locale.getDefault())
+            (v.findViewById<View>(R.id.tv_date) as TextView).text = sdf.format(calendar.time)
+            mLLWeekTitle.addView(
+                v,
+                LinearLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 3F)
+            )
+        }
 
         val dbHelper = CourseDbHelper(mContext)
         mDb = dbHelper.writableDatabase
@@ -42,7 +70,6 @@ class MainActivity : AppCompatActivity() {
                         mCourse = course
                         mTeacher = teacher
                         mLocation = location
-                        Log.i("Info: ", "$mCourse $mTeacher $mLocation")
                     }
                 })
                 myDialog.setCancel(object : MyDialog.IOnCancelListener {
@@ -60,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 myDialog.setConfirm(object : MyDialog.IOnConfirmListener {
                     override fun onConfirm(myDialog: MyDialog) {
                         // 不能全为空
-                        if (mCourse == "" || mTeacher == "" || mLocation == ""){
+                        if (mCourse == "" || mTeacher == "" || mLocation == "") {
                             return
                         }
                         myDialog.dismiss()
@@ -71,7 +98,17 @@ class MainActivity : AppCompatActivity() {
                 myDialog.show()
             }
         }
-        layoutManager = GridLayoutManager(mContext, MyValues.weekDisplayNum)
+        layoutManager = GridLayoutManager(mContext, 3 * MyValues.weekDisplayNum + 1)
+        (layoutManager as GridLayoutManager).spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position % (MyValues.weekDisplayNum + 1) == 0) {
+                        1
+                    } else {
+                        3
+                    }
+                }
+            }
         recyclerView.layoutManager = layoutManager
         mAdapter = MyAdapter(mContext, cursor, mListener)
         recyclerView.adapter = mAdapter

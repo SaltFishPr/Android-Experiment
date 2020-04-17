@@ -3,33 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="110dp"
-    android:orientation="vertical"
-    app:cardCornerRadius="6dp">
+    android:layout_margin="2dp"
+    app:cardBackgroundColor="#00FFFFFF"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="2dp">
 
-    <TextView
-        android:id="@+id/tv_course"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:gravity="center"
-        android:text="智能终端与操作系统"
-        android:textSize="14sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_teacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="tangzukai"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_course"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:text="5-1-101"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_teacher"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>
