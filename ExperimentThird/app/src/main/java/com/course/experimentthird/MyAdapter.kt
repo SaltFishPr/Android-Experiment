@@ -2,10 +2,12 @@ package com.course.experimentthird
 
 import android.content.Context
 import android.database.Cursor
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.course.experimentthird.datasource.CourseContract
@@ -82,7 +84,8 @@ class MyAdapter(
             temp.tvTeacher.text = nTeacherName
             temp.tvLocation.text = nLocation
             temp.itemView.setOnClickListener {
-                mListener.onClick(position - 7)
+                Toast.makeText(mContext,(position - 7).toString(),Toast.LENGTH_SHORT).show()
+//                mListener.onClick(position - 7)
             }
         }
     }
@@ -99,22 +102,21 @@ class MyAdapter(
         fun onClick(pos: Int)
     }
 
-    fun swapCursor(newCursor: Cursor?) { // Always close the previous mCursor first
+    fun swapCursor(newCursor: Cursor?) {
         mCursor.close()
         if (newCursor != null) {
             mCursor = newCursor
             this.notifyDataSetChanged()
         }
     }
+    class WeekdayHeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        val tvWeekday: TextView = v.findViewById(R.id.tv_weekday)
+        val tvDate: TextView = v.findViewById(R.id.tv_date)
+    }
 
     class CardViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val tvCourse: TextView = v.findViewById(R.id.tv_course)
         val tvTeacher: TextView = v.findViewById(R.id.tv_teacher)
         val tvLocation: TextView = v.findViewById(R.id.tv_location)
-    }
-
-    class WeekdayHeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val tvWeekday: TextView = v.findViewById(R.id.tv_weekday)
-        val tvDate: TextView = v.findViewById(R.id.tv_date)
     }
 }

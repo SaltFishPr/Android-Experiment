@@ -22,13 +22,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initView()
-    }
 
-    private fun initView() {
         recyclerView = findViewById(R.id.rv_grid)
-        layoutManager = GridLayoutManager(this, MyValues.weekDisplayNum)
-        recyclerView.layoutManager = layoutManager
+//        recyclerView.background = getDrawable(R.drawable.bridge)
 
         val dbHelper = CourseDbHelper(this)
         mDb = dbHelper.writableDatabase
@@ -53,17 +49,20 @@ class MainActivity : AppCompatActivity() {
                 myDialog.setRemove(object : MyDialog.IOnRemoveListener {
                     override fun onRemove(myDialog: MyDialog) {
                         myDialog.dismiss()
+                        updateCourse(pos)
                     }
                 })
                 myDialog.setConfirm(object : MyDialog.IOnConfirmListener {
                     override fun onConfirm(myDialog: MyDialog) {
                         myDialog.dismiss()
+                        updateCourse(pos)
                     }
                 })
                 myDialog.show()
             }
         }
-
+        layoutManager = GridLayoutManager(this, MyValues.weekDisplayNum)
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = MyAdapter(this, cursor, mListener)
     }
 
@@ -86,5 +85,14 @@ class MainActivity : AppCompatActivity() {
         cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, mTeacher)
         cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, mLocation)
         mDb.insert(CourseContract.CourseEntry.TABLE_NAME, null, cv)
+    }
+
+    private fun updateCourse(pos: Int) {
+        val cv = ContentValues()
+        cv.put(CourseContract.CourseEntry.COLUMN_COURSE_NAME, mCourse)
+        cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, mTeacher)
+        cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, mLocation)
+        cv.put(CourseContract.CourseEntry.COLUMN_COURSE_INDEX, pos)
+        mDb.update(CourseContract.CourseEntry.TABLE_NAME,cv,"${CourseContract.CourseEntry.COLUMN_COURSE_INDEX} = ?", arrayOf(pos.toString()))
     }
 }

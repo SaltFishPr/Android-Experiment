@@ -96,9 +96,19 @@ class MyDialog : Dialog, View.OnClickListener {
                 cancelListener.onCancel(this)
             }
             R.id.btn_remove -> {
+                cardInfo.getInfo(
+                    "",
+                    "",
+                    ""
+                )
                 removeListener.onRemove(this)
             }
             R.id.btn_confirm -> {
+                cardInfo.getInfo(
+                    mEtCourse.text.toString(),
+                    mEtTeacher.toString(),
+                    mEtLocation.toString()
+                )
                 confirmListener.onConfirm(this)
             }
         }

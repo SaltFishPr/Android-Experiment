@@ -24,12 +24,12 @@ class CourseDbHelper(context: Context) :
                     "); "
         db.execSQL(SQL_CREATE_COURSE_TABLE)
         // 初始化
-        for (i in 0..MyValues.courseNum * MyValues.weekDisplayNum) {
+        for (i in 0 until (MyValues.courseNum + 1)* MyValues.weekDisplayNum) {
             val cv = ContentValues()
             cv.put(CourseContract.CourseEntry.COLUMN_COURSE_INDEX, i)
-            cv.put(CourseContract.CourseEntry.COLUMN_COURSE_NAME, "")
-            cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, "")
-            cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, "")
+            cv.put(CourseContract.CourseEntry.COLUMN_COURSE_NAME, "Default")
+            cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, "Default")
+            cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, "Default")
             db.insert(CourseContract.CourseEntry.TABLE_NAME, null, cv)
         }
     }
