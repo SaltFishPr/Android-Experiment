@@ -20,7 +20,7 @@ class MyDialog : Dialog, View.OnClickListener {
     private lateinit var mBtnCancel: Button
     private lateinit var mBtnRemove: Button
     private lateinit var mBtnConfirm: Button
-    private lateinit var mDb: SQLiteDatabase
+
     private lateinit var cardInfo: CardInfo
     private lateinit var cancelListener: IOnCancelListener
     private lateinit var removeListener: IOnRemoveListener
@@ -43,15 +43,12 @@ class MyDialog : Dialog, View.OnClickListener {
         p.width = (size.x * 0.8).toInt()
         window!!.attributes = p
 
-        mEtCourse = findViewById(R.id.tv_course)
-        mEtTeacher = findViewById(R.id.tv_teacher)
-        mEtLocation = findViewById(R.id.tv_location)
-        mBtnCancel = findViewById(R.id.btn_cancel)
-        mBtnRemove = findViewById(R.id.btn_remove)
-        mBtnConfirm = findViewById(R.id.btn_confirm)
-
-        val dbHelper = CourseDbHelper(context)
-        mDb = dbHelper.writableDatabase
+        mEtCourse = this.findViewById(R.id.et_course)
+        mEtTeacher = this.findViewById(R.id.et_teacher)
+        mEtLocation = this.findViewById(R.id.et_location)
+        mBtnCancel = this.findViewById(R.id.btn_cancel)
+        mBtnRemove = this.findViewById(R.id.btn_remove)
+        mBtnConfirm = this.findViewById(R.id.btn_confirm)
 
         mBtnCancel.setOnClickListener(this)
         mBtnConfirm.setOnClickListener(this)
@@ -106,8 +103,8 @@ class MyDialog : Dialog, View.OnClickListener {
             R.id.btn_confirm -> {
                 cardInfo.getInfo(
                     mEtCourse.text.toString(),
-                    mEtTeacher.toString(),
-                    mEtLocation.toString()
+                    mEtTeacher.text.toString(),
+                    mEtLocation.text.toString()
                 )
                 confirmListener.onConfirm(this)
             }

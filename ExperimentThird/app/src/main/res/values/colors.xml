@@ -3,11 +3,12 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="mGray">#809E9E9E</color>
-    <color name="mPink">#66C2185B</color>
-    <color name="mBlue">#661976D2</color>
-    <color name="mGreen">#66689F38</color>
-    <color name="mOrange">#66FF5722</color>
-    <color name="mPurple">#667C4DFF</color>
+    <color name="mGray">#CC9E9E9E</color>
+    <color name="mPink">#CCC2185B</color>
+    <color name="mBlue">#CC1976D2</color>
+    <color name="mGreen">#CC689F38</color>
+    <color name="mOrange">#CCFF5722</color>
+    <color name="mPurple">#CC7C4DFF</color>
+    <color name="mWhite">#CCF5F5F5</color>
 
 </resources>

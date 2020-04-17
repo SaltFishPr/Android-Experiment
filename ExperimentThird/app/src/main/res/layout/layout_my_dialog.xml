@@ -17,6 +17,7 @@
             android:text="课程名称：" />
 
         <EditText
+            android:id="@+id/et_course"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -33,6 +34,7 @@
             android:text="教师：" />
 
         <EditText
+            android:id="@+id/et_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -49,6 +51,7 @@
             android:text="上课地点：" />
 
         <EditText
+            android:id="@+id/et_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -19,6 +19,13 @@ class MyAdapter(
     private var mListener: OnItemClickedListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val mColors = arrayOf(
+        getColor(mContext, R.color.mPink),
+        getColor(mContext, R.color.mBlue),
+        getColor(mContext, R.color.mGreen),
+        getColor(mContext, R.color.mOrange),
+        getColor(mContext, R.color.mPurple)
+    )
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -29,34 +36,10 @@ class MyAdapter(
                 v.isClickable = false
                 WeekdayHeaderViewHolder(v)
             }
-            1 -> {
-                val v =
-                    LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
-                v.setBackgroundColor(getColor(mContext, R.color.mPink))
-                CardViewHolder(v)
-            }
-            2 -> {
-                val v =
-                    LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
-                v.setBackgroundColor(getColor(mContext, R.color.mBlue))
-                CardViewHolder(v)
-            }
-            3 -> {
-                val v =
-                    LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
-                v.setBackgroundColor(getColor(mContext, R.color.mGreen))
-                CardViewHolder(v)
-            }
-            4 -> {
-                val v =
-                    LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
-                v.setBackgroundColor(getColor(mContext, R.color.mOrange))
-                CardViewHolder(v)
-            }
             else -> {
                 val v =
                     LayoutInflater.from(mContext).inflate(R.layout.item_course, viewGroup, false)
-                v.setBackgroundColor(getColor(mContext, R.color.mPurple))
+                v.setBackgroundColor(mColors[viewType % mColors.size])
                 CardViewHolder(v)
             }
         }
@@ -78,15 +61,16 @@ class MyAdapter(
                 mCursor.getString(mCursor.getColumnIndex(CourseContract.CourseEntry.COLUMN_TEACHER_NAME))
             val nLocation =
                 mCursor.getString(mCursor.getColumnIndex(CourseContract.CourseEntry.COLUMN_LOCATION))
-
             val temp: CardViewHolder = viewHolder as CardViewHolder
+            if (nCourseName == "") {
+                viewHolder.itemView.setBackgroundColor(getColor(mContext, R.color.mWhite))
+            } else {
+                viewHolder.itemView.setBackgroundColor(mColors[viewHolder.itemViewType % mColors.size])
+            }
             temp.tvCourse.text = nCourseName
             temp.tvTeacher.text = nTeacherName
             temp.tvLocation.text = nLocation
-            temp.itemView.setOnClickListener {
-                Toast.makeText(mContext,(position - 7).toString(),Toast.LENGTH_SHORT).show()
-//                mListener.onClick(position - 7)
-            }
+            temp.itemView.setOnClickListener { mListener.onClick(position - 7) }
         }
     }
 
@@ -109,6 +93,7 @@ class MyAdapter(
             this.notifyDataSetChanged()
         }
     }
+
     class WeekdayHeaderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val tvWeekday: TextView = v.findViewById(R.id.tv_weekday)
         val tvDate: TextView = v.findViewById(R.id.tv_date)
