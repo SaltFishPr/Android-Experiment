@@ -27,9 +27,9 @@ class CourseDbHelper(context: Context) :
         for (i in 0 until (MyValues.courseNum + 1)* MyValues.weekDisplayNum) {
             val cv = ContentValues()
             cv.put(CourseContract.CourseEntry.COLUMN_COURSE_INDEX, i)
-            cv.put(CourseContract.CourseEntry.COLUMN_COURSE_NAME, "Default")
-            cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, "Default")
-            cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, "Default")
+            cv.put(CourseContract.CourseEntry.COLUMN_COURSE_NAME, "")
+            cv.put(CourseContract.CourseEntry.COLUMN_TEACHER_NAME, "")
+            cv.put(CourseContract.CourseEntry.COLUMN_LOCATION, "")
             db.insert(CourseContract.CourseEntry.TABLE_NAME, null, cv)
         }
     }
