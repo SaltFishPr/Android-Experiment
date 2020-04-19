@@ -14,7 +14,8 @@
      limitations under the License.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,54 +27,140 @@
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Saturday, September 24" />
 
-    <!-- Text that describes weather condition -->
-    <TextView
-        android:id="@+id/weather_description"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Rainy" />
+    <ImageView
+        android:id="@+id/image_weather_detail"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/art_clear"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
-    <!-- High temperature for today -->
     <TextView
         android:id="@+id/high_temperature"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="60sp"
+        app:layout_constraintLeft_toRightOf="@+id/image_weather_detail"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image_weather_detail"
         tools:text="19\u00b0" />
 
-    <!-- Low temperature for today -->
+
     <TextView
         android:id="@+id/low_temperature"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@+id/weather_description"
+        app:layout_constraintLeft_toLeftOf="@+id/high_temperature"
+        app:layout_constraintRight_toRightOf="@id/high_temperature"
         tools:text="10\u00b0" />
 
-    <!-- Humidity  -->
     <TextView
-        android:id="@+id/humidity"
+        android:id="@+id/weather_description"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="38%" />
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toLeftOf="@id/image_weather_detail"
+        app:layout_constraintRight_toRightOf="@id/image_weather_detail"
+        app:layout_constraintTop_toBottomOf="@+id/image_weather_detail"
+        tools:text="Rainy" />
 
-    <!-- Pressure  -->
-    <TextView
-        android:id="@+id/pressure"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="995 hPa" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/low_temperature">
 
-    <!-- Wind  -->
-    <TextView
-        android:id="@+id/wind"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="4km/h NW" />
+        <LinearLayout
+            android:id="@+id/ll_011"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/ll_012"
+            app:layout_constraintTop_toTopOf="parent">
 
-</LinearLayout>
+            <TextView
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="108dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                android:text="Humidity: " />
+
+            <TextView
+                android:id="@+id/humidity"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                tools:text="38%" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_012"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/ll_013"
+            app:layout_constraintTop_toBottomOf="@+id/ll_011">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="108dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                android:text="Pressure: " />
+
+            <TextView
+                android:id="@+id/pressure"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                tools:text="995 hPa" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_013"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_012">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="108dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                android:text="Wind: " />
+
+            <TextView
+                android:id="@+id/wind"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                tools:text="4km/h NW" />
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

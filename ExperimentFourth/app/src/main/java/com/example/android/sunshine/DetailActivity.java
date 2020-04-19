@@ -17,6 +17,8 @@ package com.example.android.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -27,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.sunshine.data.WeatherContract;
@@ -86,6 +89,7 @@ public class DetailActivity extends AppCompatActivity implements
     /* The URI that is used to access the chosen day's weather details */
     private Uri mUri;
 
+    private ImageView mImageView;
     private TextView mDateView;
     private TextView mDescriptionView;
     private TextView mHighTemperatureView;
@@ -105,6 +109,7 @@ public class DetailActivity extends AppCompatActivity implements
         mHumidityView = (TextView) findViewById(R.id.humidity);
         mWindView = (TextView) findViewById(R.id.wind);
         mPressureView = (TextView) findViewById(R.id.pressure);
+        mImageView = findViewById(R.id.image_weather_detail);
 
 
         mUri = getIntent().getData();
@@ -265,6 +270,53 @@ public class DetailActivity extends AppCompatActivity implements
         /* Set the text */
         mDescriptionView.setText(description);
 
+        Drawable drawable;
+        switch (description) {
+            case "Drizzle":
+            case "Light Rain":
+            case "Moderate Rain":
+                drawable = getResources().getDrawable(R.drawable.art_light_rain);
+                break;
+            case "Heavy Rain":
+            case "Extreme Rain":
+            case "Intense Rain":
+            case "Freezing Rain":
+            case "Light Shower":
+            case "Ragged Shower":
+                drawable = getResources().getDrawable(R.drawable.art_rain);
+                break;
+            case "Light Snow":
+            case "Snow":
+            case "Heavy Snow":
+            case "Sleet":
+            case "Shower Sleet":
+            case "Rain and Snow":
+            case "Shower Snow":
+                drawable = getResources().getDrawable(R.drawable.art_snow);
+                break;
+            case "Mist":
+            case "Smoke":
+            case "Haze":
+            case "Sand, Dust":
+            case "Fog":
+                drawable = getResources().getDrawable(R.drawable.art_fog);
+                break;
+            case "Clear":
+            case "Mostly Clear":
+                drawable = getResources().getDrawable(R.drawable.art_clear);
+                break;
+            case "Scattered Clouds":
+            case "Broken Clouds":
+                drawable = getResources().getDrawable(R.drawable.art_light_clouds);
+                break;
+            case "Overcast Clouds":
+                drawable = getResources().getDrawable(R.drawable.art_clouds);
+                break;
+            default:
+                drawable = getResources().getDrawable(R.drawable.ic_unknown_24px);
+                break;
+        }
+        mImageView.setImageDrawable(drawable);
         /**************************
          * High (max) temperature *
          **************************/

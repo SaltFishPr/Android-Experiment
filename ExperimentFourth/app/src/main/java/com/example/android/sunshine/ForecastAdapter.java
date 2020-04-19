@@ -17,11 +17,17 @@ package com.example.android.sunshine;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.sunshine.utilities.SunshineDateUtils;
@@ -31,7 +37,7 @@ import com.example.android.sunshine.utilities.SunshineWeatherUtils;
  * {@link ForecastAdapter} exposes a list of weather forecasts
  * from a {@link android.database.Cursor} to a {@link android.support.v7.widget.RecyclerView}.
  */
-class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapterViewHolder> {
+class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /* The context we use to utility methods, app resources and layout inflaters */
     private final Context mContext;
@@ -56,7 +62,7 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
     /**
      * Creates a ForecastAdapter.
      *
-     * @param context Used to talk to the UI and app resources
+     * @param context      Used to talk to the UI and app resources
      * @param clickHandler The on-click handler for this adapter. This single handler is called
      *                     when an item is clicked.
      */
@@ -77,15 +83,20 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
      * @return A new ForecastAdapterViewHolder that holds the View for each list item
      */
     @Override
-    public ForecastAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        if (viewType == 0) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.today_item, viewGroup, false);
+            view.setFocusable(true);
+            return new TodayViewHolder(view);
+        } else {
+            View view = LayoutInflater
+                    .from(mContext)
+                    .inflate(R.layout.forecast_list_item, viewGroup, false);
+            view.setFocusable(true);
+            return new ForecastAdapterViewHolder(view);
+        }
 
-        View view = LayoutInflater
-                .from(mContext)
-                .inflate(R.layout.forecast_list_item, viewGroup, false);
 
-        view.setFocusable(true);
-
-        return new ForecastAdapterViewHolder(view);
     }
 
     /**
@@ -94,19 +105,14 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
      * details for this particular position, using the "position" argument that is conveniently
      * passed into us.
      *
-     * @param forecastAdapterViewHolder The ViewHolder which should be updated to represent the
-     *                                  contents of the item at the given position in the data set.
-     * @param position                  The position of the item within the adapter's data set.
+     * @param viewHolder The ViewHolder which should be updated to represent the
+     *                   contents of the item at the given position in the data set.
+     * @param position   The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         mCursor.moveToPosition(position);
 
-
-        /*******************
-         * Weather Summary *
-         *******************/
-        /* Read date from the cursor */
         long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
         /* Get human readable string using our utility method */
         String dateString = SunshineDateUtils.getFriendlyDateString(mContext, dateInMillis, false);
@@ -121,9 +127,69 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
         String highAndLowTemperature =
                 SunshineWeatherUtils.formatHighLows(mContext, highInCelsius, lowInCelsius);
 
-        String weatherSummary = dateString + " - " + description + " - " + highAndLowTemperature;
+        String highString = SunshineWeatherUtils.formatTemperature(mContext, highInCelsius);
+        String lowString = SunshineWeatherUtils.formatTemperature(mContext, lowInCelsius);
 
-        forecastAdapterViewHolder.weatherSummary.setText(weatherSummary);
+        Drawable drawable;
+        switch (description) {
+            case "Drizzle":
+            case "Light Rain":
+            case "Moderate Rain":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_light_rain);
+                break;
+            case "Heavy Rain":
+            case "Extreme Rain":
+            case "Intense Rain":
+            case "Freezing Rain":
+            case "Light Shower":
+            case "Ragged Shower":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_rain);
+                break;
+            case "Light Snow":
+            case "Snow":
+            case "Heavy Snow":
+            case "Sleet":
+            case "Shower Sleet":
+            case "Rain and Snow":
+            case "Shower Snow":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_snow);
+                break;
+            case "Mist":
+            case "Smoke":
+            case "Haze":
+            case "Sand, Dust":
+            case "Fog":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_fog);
+                break;
+            case "Clear":
+            case "Mostly Clear":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_clear);
+                break;
+            case "Scattered Clouds":
+            case "Broken Clouds":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_light_clouds);
+                break;
+            case "Overcast Clouds":
+                drawable = mContext.getResources().getDrawable(R.drawable.art_clouds);
+                break;
+            default:
+                drawable = mContext.getResources().getDrawable(R.drawable.ic_unknown_24px);
+                break;
+        }
+        if (getItemViewType(position) == 0) {
+            ((TodayViewHolder) viewHolder).weatherImage.setImageDrawable(drawable);
+            ((TodayViewHolder) viewHolder).mDate.setText(dateString.trim());
+            ((TodayViewHolder) viewHolder).mWeather.setText(description.trim());
+            ((TodayViewHolder) viewHolder).mHighTemperature.setText(highString.trim());
+            ((TodayViewHolder) viewHolder).mLowTemperature.setText(lowString.trim());
+
+        } else {
+            Log.i("dateString:", dateString);
+            ((ForecastAdapterViewHolder) viewHolder).weatherImage.setImageDrawable(drawable);
+            ((ForecastAdapterViewHolder) viewHolder).mDate.setText(dateString.trim());
+            ((ForecastAdapterViewHolder) viewHolder).mWeather.setText(description.trim());
+            ((ForecastAdapterViewHolder) viewHolder).mTemperature.setText(highAndLowTemperature.trim());
+        }
     }
 
     /**
@@ -136,6 +202,15 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
     public int getItemCount() {
         if (null == mCursor) return 0;
         return mCursor.getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     /**
@@ -157,12 +232,18 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
      * OnClickListener, since it has access to the adapter and the views.
      */
     class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView weatherSummary;
+        final ImageView weatherImage;
+        final TextView mDate;
+        final TextView mWeather;
+        final TextView mTemperature;
 
         ForecastAdapterViewHolder(View view) {
             super(view);
 
-            weatherSummary = (TextView) view.findViewById(R.id.tv_weather_data);
+            weatherImage = view.findViewById(R.id.image_weather);
+            mDate = view.findViewById(R.id.tv_date);
+            mWeather = view.findViewById(R.id.tv_weather);
+            mTemperature = view.findViewById(R.id.tv_temperature);
 
             view.setOnClickListener(this);
         }
@@ -174,6 +255,32 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
          *
          * @param v the View that was clicked
          */
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+            mClickHandler.onClick(dateInMillis);
+        }
+    }
+
+    class TodayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final ImageView weatherImage;
+        final TextView mDate;
+        final TextView mWeather;
+        final TextView mHighTemperature;
+        final TextView mLowTemperature;
+
+        TodayViewHolder(@NonNull View itemView) {
+            super(itemView);
+            weatherImage = itemView.findViewById(R.id.image_weather_today);
+            mDate = itemView.findViewById(R.id.date_today);
+            mWeather = itemView.findViewById(R.id.weather_description_today);
+            mHighTemperature = itemView.findViewById(R.id.high_temperature_today);
+            mLowTemperature = itemView.findViewById(R.id.low_temperature_today);
+            itemView.setOnClickListener(this);
+        }
+
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
