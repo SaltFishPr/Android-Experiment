@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val mContext = this
 
-
         recyclerView = findViewById(R.id.rv_grid)
         mLLWeekTitle = findViewById(R.id.ll_week_title)
         recyclerView.setBackgroundColor(getColor(R.color.mWhite))
